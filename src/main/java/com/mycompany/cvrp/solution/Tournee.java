@@ -12,6 +12,7 @@ import com.mycompany.cvrp.instance.reseau.Point;
 import com.mycompany.cvrp.instance.reseau.Route;
 import com.mycompany.cvrp.io.InstanceReader;
 import io.exception.ReaderException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -73,6 +74,12 @@ public class Tournee {
         return coutTotal;
     }
 
+    public void setCoutTotal(int coutTotal) {
+        this.coutTotal = coutTotal;
+    }
+    
+    
+
     @Override
     public int hashCode() {
         int hash = 5;
@@ -112,28 +119,68 @@ public class Tournee {
      */
     public boolean ajouterClient(Client clientToAdd){
         int condition = this.demandeTotale + clientToAdd.getQuantiteAMeLivrer();
+        if(clientToAdd == null) return false;
         if(condition <= this.capacite){  
+            this.demandeTotale += clientToAdd.getQuantiteAMeLivrer();
+            int coutClientVersDepot = clientToAdd.getCoutVers(this.depot);
             // si on a ajouté un nouveau client dans une tournée sans clients
             if(this.clients.isEmpty()){
-                //this.listeRoutes.put(clientToAdd, new Route(this.depot, clientToAdd));
-                this.depot.ajouterRoute(clientToAdd);
-                this.coutTotal += this.depot.getCoutVers(clientToAdd);
+                this.coutTotal = 2 * coutClientVersDepot;
             }
             else {
-                int lastElementIndex = this.clients.size()+1;
-                Client lastClient = this.clients.get(lastElementIndex);
-                //this.listeRoutes.put(clientToAdd, new Route(this.clients.get(lastElementIndex), clientToAdd));
-                lastClient.ajouterRoute(clientToAdd);
-                int ajout = lastClient.getCoutVers(clientToAdd) + clientToAdd.getCoutVers(this.depot) - lastClient.getCoutVers(this.depot);
-                this.coutTotal += ajout;
+                Client lastClient = new ArrayList<>(this.clients.values()).get(this.clients.size() - 1);
+                this.coutTotal -= lastClient.getCoutVers(this.depot);
+                this.coutTotal += lastClient.getCoutVers(clientToAdd);
+                this.coutTotal += coutClientVersDepot;
             }
             
             this.clients.put(clientToAdd.getId(), clientToAdd);
-            this.demandeTotale += clientToAdd.getQuantiteAMeLivrer();
-            
             return true;
         }
-        return false;
+        return false; 
+    }
+    
+    private boolean checkCoutTotal() {
+        int testCoutTotal = 0;
+        Client lastClient = null;
+        
+        for(Client c : this.getClients().values()){
+            if(lastClient == null){
+                testCoutTotal += this.depot.getCoutVers(c);
+            }
+            else {
+                testCoutTotal += lastClient.getCoutVers(c);
+            }
+            lastClient = c;
+        }
+        if(lastClient != null){
+            testCoutTotal += lastClient.getCoutVers(this.depot);
+        }
+        System.out.println("\tcheck cout total : " + (testCoutTotal == this.getCoutTotal()));
+        return testCoutTotal == this.getCoutTotal();
+    }
+    
+    private boolean checkDemandeTotale() {
+        int testDemande = 0;
+        for(Client c : this.clients.values()) testDemande += c.getQuantiteAMeLivrer();
+        if(testDemande != this.demandeTotale) return false;
+        System.out.println("\tcheck demande totale OK");
+        return true;
+    }
+    
+    private boolean checkCapacite() {
+        System.out.println("\tcheck capacité : " + (this.demandeTotale <= this.capacite));
+        return this.demandeTotale <= this.capacite;
+    }
+    
+    /**
+     * réalisabe si coût total et demande totale sont correctement calculées
+     * + demande totale est inférieure ou égale à la capacité
+     * indique si la solution est réalisable ou non
+     * @return si c'est réalisable ou non
+     */
+    public boolean check(){
+        return checkCoutTotal() && checkDemandeTotale() && checkCapacite();
     }
     
 
@@ -164,6 +211,7 @@ public class Tournee {
             for(Client cli : i.getClients()){
                 t.ajouterClient(cli);
             }
+            System.out.println("Check tournée : " + t.check());
             System.out.println(t.toString());
         } catch (ReaderException ex) {
             Logger.getLogger(Instance.class.getName()).log(Level.SEVERE, null, ex);
