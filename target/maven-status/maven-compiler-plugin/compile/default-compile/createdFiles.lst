@@ -1,0 +1,12 @@
+com/mycompany/cvrp/instance/reseau/Point.class
+com/mycompany/cvrp/instance/reseau/Route.class
+com/mycompany/cvrp/instance/Instance.class
+com/mycompany/cvrp/instance/reseau/Client.class
+io/exception/OpenFileException.class
+com/mycompany/cvrp/instance/reseau/Depot.class
+io/exception/FormatFileException.class
+com/mycompany/cvrp/io/InstanceReader.class
+io/exception/FileExistException.class
+com/mycompany/cvrp/solution/Tournee.class
+io/exception/ReaderException.class
+com/mycompany/cvrp/solution/Solution.class
