@@ -101,17 +101,19 @@ public class Solution {
         for(Tournee t : this.listeTournees){
             testCoutTotal += t.getCoutTotal();
         }
-        System.out.println("Check Cout total : " + (testCoutTotal == this.getCoutTotal()));
-        return testCoutTotal == this.getCoutTotal();
+        boolean res = (testCoutTotal == this.getCoutTotal()); 
+        System.out.println("Solution Check Cout total : " + res);
+        return res;
     }
 
     private boolean checkToutesTourneesRealisables() {
         for(Tournee t : this.listeTournees){
             if(t.check() == false){
+                System.out.println("Solution Check Tournees réalisables : false");
                return false; 
             } 
         }      
-        System.out.println("Check tournées réalisables OK");
+        System.out.println("Solution Check tournées réalisables OK");
         return true;
     }
 
@@ -130,7 +132,7 @@ public class Solution {
             System.out.println("ERREUR UNICITE ISEMPTY");
             return false;
         } 
-        System.out.println("Check unicité client tournée OK");
+        System.out.println("Solution Check unicité client tournée OK");
         return true;
     }
    
@@ -149,7 +151,7 @@ public class Solution {
     public String toString() {
         String s = "Solution{" + "nomInstance=" + instance.getNom() + ", listeTournees=";
         for(Tournee t : listeTournees){
-            s += "\t\n" + t.getInstance().getNom();
+            s += "\t\n" + t.toString();
         }
         s += "\n\tcoutTotal=" + coutTotal + '}';
         return s;
@@ -165,12 +167,14 @@ public class Solution {
             Instance i = reader.readInstance();
             Tournee t = new Tournee(i);
             Solution s = new Solution(i);
-            Client c1 = new Client(4, 5, 5, 5);
-            //s.listeTournees.add(t);
-            //t.ajouterClient(c1);
+            Client c1 = new Client(5, 5, 5, 5);
+            Client c2 = new Client(6, 6, 2, 2);
+            Client c3 = new Client(1, 7, 12, 9);
+
             s.ajouterClientDansNouvelleTournee(c1);
+            s.ajouterClientDansNouvelleTournee(c2);
+            s.ajouterClientDansTourneeExistance(c3);
             System.out.println("Size tournees dans solution : " + s.listeTournees.size());
-            //System.out.println("Check tournee : " + t.check());
             System.out.println("Check solution : " + s.check());
             
             System.out.println(s.toString());

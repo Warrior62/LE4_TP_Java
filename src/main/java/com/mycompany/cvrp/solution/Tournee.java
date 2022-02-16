@@ -122,7 +122,7 @@ public class Tournee {
         if(clientToAdd == null) return false;
         if(condition <= this.capacite){  
             this.demandeTotale += clientToAdd.getQuantiteAMeLivrer();
-            int coutClientVersDepot = clientToAdd.getCoutVers(this.depot);
+            int coutClientVersDepot = this.depot.getCoutVers(clientToAdd);
             // si on a ajouté un nouveau client dans une tournée sans clients
             if(this.clients.isEmpty()){
                 this.coutTotal = 2 * coutClientVersDepot;
@@ -156,7 +156,7 @@ public class Tournee {
         if(lastClient != null){
             testCoutTotal += lastClient.getCoutVers(this.depot);
         }
-        System.out.println("\tcheck cout total : " + (testCoutTotal == this.getCoutTotal()));
+        System.out.println("\tTournee check cout total : " + (testCoutTotal + " " + this.getCoutTotal()));
         return testCoutTotal == this.getCoutTotal();
     }
     
@@ -164,12 +164,12 @@ public class Tournee {
         int testDemande = 0;
         for(Client c : this.clients.values()) testDemande += c.getQuantiteAMeLivrer();
         if(testDemande != this.demandeTotale) return false;
-        System.out.println("\tcheck demande totale OK");
+        System.out.println("\tTournee check demande totale : true");
         return true;
     }
     
     private boolean checkCapacite() {
-        System.out.println("\tcheck capacité : " + (this.demandeTotale <= this.capacite));
+        System.out.println("\tTournee check capacité : " + (this.demandeTotale <= this.capacite));
         return this.demandeTotale <= this.capacite;
     }
     
@@ -180,17 +180,20 @@ public class Tournee {
      * @return si c'est réalisable ou non
      */
     public boolean check(){
-        return checkCoutTotal() && checkDemandeTotale() && checkCapacite();
+        boolean res = checkCoutTotal() && checkDemandeTotale() && checkCapacite();
+        if(res) System.out.println("\tTournee réalisable");
+        else System.out.println("\tTournee non-réalisable");
+        return res;
     }
     
 
     @Override
     public String toString() {
-        String s = "Tournee{" + "capacite=" + capacite + ", depot=" + depot + ", clients=";
+        String s = "Tournee{" + "capacite=" + capacite + ", depot=" + depot + ", clients=[";
         for(Client c : this.clients.values()){
-            s += "\n\tid: " + c.getId();
+            s += c.getId() + ", ";
         }
-        s += "\ndemandeTotale=" + demandeTotale + ", coutTotal=" + coutTotal + '}';
+        s += "]\ndemandeTotale=" + demandeTotale + ", coutTotal=" + coutTotal + '}';
         return s;
     }
     
@@ -211,7 +214,7 @@ public class Tournee {
             for(Client cli : i.getClients()){
                 t.ajouterClient(cli);
             }
-            System.out.println("Check tournée : " + t.check());
+            t.check();
             System.out.println(t.toString());
         } catch (ReaderException ex) {
             Logger.getLogger(Instance.class.getName()).log(Level.SEVERE, null, ex);

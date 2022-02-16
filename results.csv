@@ -1,0 +1,14 @@
+;Insertion simple;;
+;cout;tps(ms);valide ?
+A-n80-k10;5 441;6;true
+B-n45-k6;1 837;0;true
+B-n57-k7;4 355;1;true
+P-n101-k4;2 287;1;true
+A-n54-k7;3 445;1;true
+E-n101-k14;2 688;5;true
+A-n39-k5;2 119;0;true
+B-n78-k10;4 369;0;true
+A-n32-k5;1 914;3;true
+B-n31-k5;1 519;0;true
+
+SOMME;29 974;17;true
