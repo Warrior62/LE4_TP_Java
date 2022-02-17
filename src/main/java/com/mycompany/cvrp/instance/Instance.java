@@ -120,7 +120,7 @@ public class Instance {
         
         for(Client c : this.clientsALivrer.values()){
             c.ajouterRoute(clientToAdd);
-            clientToAdd.ajouterRoute(this.depot);
+            clientToAdd.ajouterRoute(c);
         }
     }
 
