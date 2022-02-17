@@ -26,13 +26,13 @@ public class InsertionSimple implements Solveur{
     public Solution solve(Instance instance) {
         Solution s = new Solution(instance);
         for(Client c : instance.getClients()){
-            boolean affecte = false;
-            if(s.ajouterClientDansTourneeExistance(c))
-                affecte = true;
-            if(!affecte)
-                s.ajouterClientDansNouvelleTournee(c);
-        }        
-        return s;
+             boolean affecte = false;
+             if(s.ajouterClientDansTourneeExistance(c))
+                 affecte = true;
+             if(!affecte)
+                 s.ajouterClientDansNouvelleTournee(c);
+         }        
+         return s;
     }
     
     
@@ -45,7 +45,7 @@ public class InsertionSimple implements Solveur{
             Solution s1 = is.solve(i);
             System.out.println("s1 : " + s1.toString() + "\n\tcheck : " + s1.check());
         } catch(Exception e){
-            System.out.println("ERROR InsertionSimple");
+            System.out.println("ERROR Insertion simple");
         }
     }
     

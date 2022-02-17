@@ -118,26 +118,25 @@ public class Tournee {
      * @return si l'ajout a pu être effectué ou non
      */
     public boolean ajouterClient(Client clientToAdd){
-        int condition = this.demandeTotale + clientToAdd.getQuantiteAMeLivrer();
         if(clientToAdd == null) return false;
-        if(condition <= this.capacite){  
-            this.demandeTotale += clientToAdd.getQuantiteAMeLivrer();
-            int coutClientVersDepot = this.depot.getCoutVers(clientToAdd);
-            // si on a ajouté un nouveau client dans une tournée sans clients
-            if(this.clients.isEmpty()){
-                this.coutTotal = 2 * coutClientVersDepot;
-            }
-            else {
-                Client lastClient = new ArrayList<>(this.clients.values()).get(this.clients.size() - 1);
-                this.coutTotal -= lastClient.getCoutVers(this.depot);
-                this.coutTotal += lastClient.getCoutVers(clientToAdd);
-                this.coutTotal += coutClientVersDepot;
-            }
-            
-            this.clients.put(clientToAdd.getId(), clientToAdd);
-            return true;
+        
+        int condition = this.demandeTotale + clientToAdd.getQuantiteAMeLivrer();       
+        if(condition > this.capacite)
+            return false;
+
+        if(this.clients.isEmpty()){
+            this.coutTotal += this.depot.getCoutVers(clientToAdd) + clientToAdd.getCoutVers(this.depot);
         }
-        return false; 
+        else {
+            Client lastClient = new ArrayList<>(this.clients.values()).get(this.clients.size() - 1);
+            this.coutTotal -= lastClient.getCoutVers(this.depot);
+            this.coutTotal += lastClient.getCoutVers(clientToAdd);
+            this.coutTotal += clientToAdd.getCoutVers(this.depot);
+        }
+
+        this.clients.put(this.clients.size(), clientToAdd);
+        this.demandeTotale += clientToAdd.getQuantiteAMeLivrer();
+        return true;
     }
     
     private boolean checkCoutTotal() {

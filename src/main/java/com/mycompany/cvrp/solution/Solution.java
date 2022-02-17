@@ -95,6 +95,27 @@ public class Solution {
         return false;
     }
     
+    public boolean ajouterClientDansDerniereTournee(Client clientToAdd){
+        int coutInit = 0, lastIndex = this.listeTournees.size() - 1;
+        
+        if(this.listeTournees.isEmpty())
+            return false;
+        
+        Tournee lastTournee = this.listeTournees.get(lastIndex);
+        coutInit = lastTournee.getCoutTotal();
+        System.out.println("cout total: " + this.coutTotal + ", coutInit: " + coutInit);
+        if(lastTournee.ajouterClient(clientToAdd)){
+            this.coutTotal -= coutInit;
+            this.coutTotal += lastTournee.getCoutTotal();
+            System.out.println("\t\tcout total: " + this.coutTotal + ", coutInit: " + coutInit);
+            return true;
+        }
+        else{
+            System.out.println("pb cli : " + clientToAdd.getId());
+        }
+        return false;
+    }
+    
     private boolean checkCoutTotal() {
         int testCoutTotal = 0;
         
@@ -170,10 +191,12 @@ public class Solution {
             Client c1 = new Client(5, 5, 5, 5);
             Client c2 = new Client(6, 6, 2, 2);
             Client c3 = new Client(1, 7, 12, 9);
+            Client c4 = new Client(1, 8, 1, 1);
 
             s.ajouterClientDansNouvelleTournee(c1);
             s.ajouterClientDansNouvelleTournee(c2);
             s.ajouterClientDansTourneeExistance(c3);
+            s.ajouterClientDansDerniereTournee(c4);
             System.out.println("Size tournees dans solution : " + s.listeTournees.size());
             System.out.println("Check solution : " + s.check());
             

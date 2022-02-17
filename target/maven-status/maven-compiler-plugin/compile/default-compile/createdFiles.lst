@@ -5,6 +5,7 @@ com/mycompany/cvrp/instance/reseau/Depot.class
 test/TestAllSolveur$Resultat.class
 com/mycompany/cvrp/io/InstanceReader.class
 io/exception/FileExistException.class
+Solveur/InsertionPlusProcheVoisin.class
 com/mycompany/cvrp/instance/reseau/Route.class
 com/mycompany/cvrp/instance/Instance.class
 test/TestAllSolveur.class
