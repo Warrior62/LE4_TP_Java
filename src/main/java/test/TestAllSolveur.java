@@ -8,6 +8,7 @@ package test;
 // TO CHECK : import des classes Instance, InstanceReader et ReaderException
 import Solveur.InsertionPlusProcheVoisin;
 import Solveur.InsertionSimple;
+import Solveur.MeilleureInsertion;
 import Solveur.Solveur;
 import com.mycompany.cvrp.instance.Instance;
 import com.mycompany.cvrp.io.InstanceReader;
@@ -91,6 +92,7 @@ public class TestAllSolveur {
         solveurs.add(new InsertionSimple());
         // TO ADD : par la suite vous ajouterez ici les autres solveurs a tester
         solveurs.add(new InsertionPlusProcheVoisin());
+        solveurs.add(new MeilleureInsertion());
     }
     
     /**

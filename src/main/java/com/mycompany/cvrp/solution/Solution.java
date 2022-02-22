@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import operateur.InsertionClient;
+import operateur.Operateur;
 
 /**
  *
@@ -142,7 +144,7 @@ public class Solution {
         List<Client> clients = this.instance.getClients();
         for(Tournee t : this.listeTournees){
             System.out.println("Nb cli dans t : " + t.getClients().size());
-            for(Client c : t.getClients().values()){
+            for(Client c : t.getClients()){
                 if(!clients.remove(c)){
                     System.out.println("le client " + c.getId() + " pose problème");
                     return false;
@@ -166,6 +168,28 @@ public class Solution {
      */
     public boolean check(){
         return checkCoutTotal() && checkToutesTourneesRealisables() && checkUniciteClientTournee();
+    }
+    
+    public InsertionClient getMeilleureInsertion(Client clientToInsert) {
+        InsertionClient insMeilleur = new InsertionClient();        
+        if(clientToInsert == null) return insMeilleur;
+        InsertionClient ins;
+        
+        for(Tournee t : this.getListeTournees()){
+            ins = t.getMeilleureInsertion(clientToInsert);
+            if(ins.isMeilleur(insMeilleur))
+                insMeilleur = ins; 
+        }             
+        return insMeilleur;
+    }
+    
+    public boolean doInsertion(InsertionClient infos){
+        if(infos == null) return false;  
+        if(!this.listeTournees.contains(infos.getTournee())) return false;
+        if(!infos.doMouvementIfRealisable()) return false;
+        
+        this.coutTotal += infos.getDeltaCout();
+        return true;
     }
     
     @Override

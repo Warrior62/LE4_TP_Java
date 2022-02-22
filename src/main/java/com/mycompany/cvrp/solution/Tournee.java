@@ -15,10 +15,13 @@ import io.exception.ReaderException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import operateur.InsertionClient;
+import operateur.Operateur;
 
 /**
  * Représente le trajet effectué par un véhicule pour livrer des clients
@@ -32,7 +35,7 @@ public class Tournee {
     private final Depot depot;
     // collection triée dans l'ordre de visite
     // la clé correspond à l'ID du client
-    private final LinkedHashMap<Integer, Client> clients;
+    private final LinkedList<Client> clients;
     // somme des demandes des clients livrés dans la tournée
     private int demandeTotale = 0;
     // somme des coûts des routes empruntées pour livrer
@@ -44,7 +47,7 @@ public class Tournee {
         this.instance = instance;
         this.capacite = instance.getCapacite();
         this.depot = instance.getDepot();
-        this.clients = new LinkedHashMap<>();
+        this.clients = new LinkedList<>();
         this.listeRoutes = new HashMap<>();
     }
 
@@ -60,10 +63,12 @@ public class Tournee {
         return instance;
     }
     
-    
+    public int getNbClients() {
+        return this.clients.size();
+    }
 
-    public LinkedHashMap<Integer, Client> getClients() {
-        return clients;
+    public LinkedList<Client> getClients() {
+        return new LinkedList<>(clients);
     }
 
     public int getDemandeTotale() {
@@ -105,6 +110,10 @@ public class Tournee {
         return true;
     }
     
+    private int deltaCoutInsertionFin(Client clientToAdd){
+      return this.deltaCoutInsertion(this.getNbClients(), clientToAdd);
+    }
+    
     /**
      * ajoute le client en dernière position de la tournée
      * @note ajout d'un client possible que si la demande totale de la tourne 
@@ -120,22 +129,20 @@ public class Tournee {
     public boolean ajouterClient(Client clientToAdd){
         if(clientToAdd == null) return false;
         
+        if(!isClientAjoutable(clientToAdd))
+            return false;
+        
+        this.coutTotal += this.deltaCoutInsertionFin(clientToAdd);
+
+        this.clients.add(clientToAdd);
+        this.demandeTotale += clientToAdd.getQuantiteAMeLivrer();
+        return true;
+    }
+    
+    private boolean isClientAjoutable(Client clientToAdd){
         int condition = this.demandeTotale + clientToAdd.getQuantiteAMeLivrer();       
         if(condition > this.capacite)
             return false;
-
-        if(this.clients.isEmpty()){
-            this.coutTotal += this.depot.getCoutVers(clientToAdd) + clientToAdd.getCoutVers(this.depot);
-        }
-        else {
-            Client lastClient = new ArrayList<>(this.clients.values()).get(this.clients.size() - 1);
-            this.coutTotal -= lastClient.getCoutVers(this.depot);
-            this.coutTotal += lastClient.getCoutVers(clientToAdd);
-            this.coutTotal += clientToAdd.getCoutVers(this.depot);
-        }
-
-        this.clients.put(this.clients.size(), clientToAdd);
-        this.demandeTotale += clientToAdd.getQuantiteAMeLivrer();
         return true;
     }
     
@@ -143,7 +150,7 @@ public class Tournee {
         int testCoutTotal = 0;
         Client lastClient = null;
         
-        for(Client c : this.getClients().values()){
+        for(Client c : this.getClients()){
             if(lastClient == null){
                 testCoutTotal += this.depot.getCoutVers(c);
             }
@@ -161,7 +168,7 @@ public class Tournee {
     
     private boolean checkDemandeTotale() {
         int testDemande = 0;
-        for(Client c : this.clients.values()) testDemande += c.getQuantiteAMeLivrer();
+        for(Client c : this.clients) testDemande += c.getQuantiteAMeLivrer();
         if(testDemande != this.demandeTotale) return false;
         System.out.println("\tTournee check demande totale : true");
         return true;
@@ -185,11 +192,87 @@ public class Tournee {
         return res;
     }
     
+    // renvoie le point de la tournée qui précéde la position position
+    // si position vaut 0 alors c'est le dépot
+    // position doit être comprise entre 0 et n-1
+    private Point getPrec(int position){
+        if(position == 0) return this.getDepot();
+        return this.getClients().get(position-1);
+    }
+    
+    // renvoie le point de la tournée qui est actuelemment  la position position
+    // si position est égal au nombre de clients dans la tournée, alors il s’agit du dépôt
+    private Point getCurrent(int position) {
+        if(position == this.getNbClients()) return this.getDepot();
+        return this.getClients().get(position);
+    }
+    
+    // indique s'il est possible d'insérer un client en position position
+    private boolean isPositionInsertionValide(int position) {
+        if(position < 0 || position > this.getNbClients())
+            return false;
+        return true;   
+    }
+    
+    public int deltaCoutInsertion(int position, Client clientToAdd) {
+        if(!this.isPositionInsertionValide(position) || clientToAdd == null)
+            return Integer.MAX_VALUE;
+        
+        int deltaCout = 0;
+        
+        if(this.clients.isEmpty()){
+            deltaCout += this.depot.getCoutVers(clientToAdd) + clientToAdd.getCoutVers(this.depot);
+        }
+        else {
+            Point currentClient = this.getCurrent(position);
+            Point lastClient = this.getPrec(position);
+            
+            deltaCout -= lastClient.getCoutVers(currentClient);
+            deltaCout += lastClient.getCoutVers(clientToAdd);
+            deltaCout += clientToAdd.getCoutVers(currentClient);
+        }
+        
+        return deltaCout;
+    }
+    
+    public InsertionClient getMeilleureInsertion(Client clientToInsert){
+        InsertionClient insMeilleur = new InsertionClient();
+        
+        if(!isClientAjoutable(clientToInsert)) return insMeilleur;
+        
+        InsertionClient ins;
+        
+        for(int pos=0; pos<this.getNbClients(); pos++){
+           ins = new InsertionClient(this, clientToInsert, pos);
+           if(ins.isMeilleur(insMeilleur))
+               insMeilleur = ins;
+        }       
+        return insMeilleur;
+    }
+    
+    public boolean doInsertion(InsertionClient infos){
+        if(infos==null) return false;
+        if(!infos.isMouvementRealisable()) return false;
+        
+        Client client = infos.getClient();
+        
+        this.coutTotal += infos.getDeltaCout();
+        this.clients.add(infos.getPosition(), client);    
+        this.demandeTotale += client.getQuantiteAMeLivrer();
+        
+        if(!this.check()){
+            System.out.println("ERROR doInsertion");
+            System.out.println(infos);
+            System.exit(-1);
+        }
+        return true;
+    }
+    
 
     @Override
     public String toString() {
         String s = "Tournee{" + "capacite=" + capacite + ", depot=" + depot + ", clients=[";
-        for(Client c : this.clients.values()){
+        for(Client c : this.clients){
             s += c.getId() + ", ";
         }
         s += "]\ndemandeTotale=" + demandeTotale + ", coutTotal=" + coutTotal + '}';

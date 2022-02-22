@@ -1,6 +1,7 @@
 Solveur/InsertionSimple.class
 com/mycompany/cvrp/instance/reseau/Point.class
 test/TestAllSolveur$InstanceSolveur.class
+operateur/InsertionClient.class
 com/mycompany/cvrp/instance/reseau/Depot.class
 test/TestAllSolveur$Resultat.class
 com/mycompany/cvrp/io/InstanceReader.class
@@ -10,9 +11,12 @@ com/mycompany/cvrp/instance/reseau/Route.class
 com/mycompany/cvrp/instance/Instance.class
 test/TestAllSolveur.class
 com/mycompany/cvrp/instance/reseau/Client.class
+operateur/Operateur.class
 io/exception/OpenFileException.class
 io/exception/FormatFileException.class
 Solveur/Solveur.class
 com/mycompany/cvrp/solution/Tournee.class
 io/exception/ReaderException.class
 com/mycompany/cvrp/solution/Solution.class
+Solveur/MeilleureInsertion.class
+test/TestMeilleurInsertion.class
