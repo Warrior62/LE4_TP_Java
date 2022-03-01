@@ -10,6 +10,7 @@ import com.mycompany.cvrp.instance.reseau.Client;
 import com.mycompany.cvrp.io.InstanceReader;
 import com.mycompany.cvrp.solution.Solution;
 import java.util.LinkedList;
+import java.util.List;
 import operateur.InsertionClient;
 import operateur.Operateur;
 
@@ -30,8 +31,7 @@ public class MeilleureInsertion implements Solveur{
         Solution s = new Solution(instance);
         InsertionClient best = null;
         while(!clients.isEmpty()){
-            for(Client c : clients)
-                best = s.getMeilleureInsertion(c);
+            best = findNextClient(s, clients);
             if(s.doInsertion(best)){
                 clients.remove(best.getClient());
             }
@@ -42,6 +42,21 @@ public class MeilleureInsertion implements Solveur{
         }
         return s;
     }
+    
+    private InsertionClient findNextClient(Solution solution, List<Client> clients){
+        InsertionClient insMeilleur = new InsertionClient();
+        InsertionClient insActu = new InsertionClient();
+        if(clients.isEmpty())return insMeilleur;
+        for(Client c: clients){
+            insActu = solution.getMeilleureInsertion(c);
+            if(insActu.isMeilleur(insMeilleur)){
+                insMeilleur = insActu;
+            }
+            
+        }      
+        return insMeilleur;
+    }
+
     
     public static void main(String[] args) {
         InstanceReader reader;
