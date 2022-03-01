@@ -22,6 +22,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import operateur.InsertionClient;
 import operateur.Operateur;
+import operateur.OperateurInterTournees;
+import operateur.OperateurIntraTournee;
+import operateur.OperateurLocal;
+import operateur.TypeOperateurLocal;
 
 /**
  * Représente le trajet effectué par un véhicule pour livrer des clients
@@ -208,10 +212,16 @@ public class Tournee {
     }
     
     // indique s'il est possible d'insérer un client en position position
-    private boolean isPositionInsertionValide(int position) {
+    public boolean isPositionInsertionValide(int position) {
         if(position < 0 || position > this.getNbClients())
             return false;
         return true;   
+    }
+    
+    public Client getClient(int position){
+        if(this.isPositionInsertionValide(position)) 
+            return this.getClients().get(position);
+        return null;
     }
     
     public int deltaCoutInsertion(int position, Client clientToAdd) {
@@ -268,7 +278,87 @@ public class Tournee {
         return true;
     }
     
+    public OperateurLocal getMeilleurOperateurIntra(TypeOperateurLocal type) { 
+        OperateurLocal best = OperateurLocal.getOperateur(type);
+        for(int i=0; i<clients.size(); i++) {
+            for(int j=0; j<clients.size()+1; j++) { 
+                OperateurIntraTournee op = OperateurLocal.getOperateurIntra(type, this, i, j);
+                if(op.isMeilleur(best)) {
+                    best = op;
+                }
+            }
+        }    
+        return best;
+    }
+    
+    public OperateurLocal getMeilleurOperateurInter(TypeOperateurLocal type) { 
+        OperateurLocal best = OperateurLocal.getOperateur(type);
+        for(int i=0; i<clients.size(); i++) {
+            for(int j=0; j<clients.size()+1; j++) { 
+                OperateurInterTournees op = OperateurLocal.getOperateurInter(type, this, i, j);
+                if(op.isMeilleur(best)) {
+                    best = op;
+                }
+            }
+        }    
+        return best;
+    }
+    
+    private Point getNext(int position){
+        return this.getCurrent(position + 1);
+    }
+    
+    private boolean isPositionValide(int position){
+        if(position >= 0 && position <= this.getNbClients()-1)
+            return true;
+        return false;
+    }
 
+    /**
+     * Coût engendré par la suppression du client à la position
+     * @param position
+     * @return Coût
+     */
+    private int deltaCoutSuppression(int position){
+        if(!this.isPositionValide(position))
+            return Integer.MAX_VALUE;
+        
+        Point prevClient = this.getPrec(position);
+        Point nextClient = this.getNext(position);
+        Point currentClient = this.getCurrent(position);
+        
+        int deltaCout = prevClient.getCoutVers(nextClient);   
+        deltaCout = deltaCout - prevClient.getCoutVers(currentClient) - currentClient.getCoutVers(nextClient);
+        return deltaCout;
+    }
+    
+    /**
+     * Coût engendré par le déplacement dans la même tournée du client
+     * à la positionI avant le point à la positionJ
+     * @param positionI
+     * @param positionJ
+     * @return Coût
+     */
+    public int deltaCoutDeplacement(int positionI, int positionJ){
+        if(!positionsDeplacementValides(positionI, positionJ))
+            return Integer.MAX_VALUE;
+        
+        Client clientDeplace = this.getClient(positionI);
+        int deltaCout = this.deltaCoutSuppression(positionI);
+        deltaCout += this.deltaCoutInsertion(positionJ, clientDeplace);
+        return deltaCout;
+    }
+
+    private boolean positionsDeplacementValides(int positionI, int positionJ) {
+        if (positionI == positionJ || positionI == positionJ+1 || positionI == positionJ-1) {
+            return false;
+        }
+        if (!this.isPositionValide(positionI) || !this.isPositionValide(positionJ)) {
+            return false;
+        }
+        return true;
+    }
+    
     @Override
     public String toString() {
         String s = "Tournee{" + "capacite=" + capacite + ", depot=" + depot + ", clients=[";

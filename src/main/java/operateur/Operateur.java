@@ -53,6 +53,11 @@ public abstract class Operateur {
         return true;
     }
     
+    public boolean isMouvementAmeliorant(){
+        if(this.getDeltaCout() < 0) return true;
+        return false;
+    }
+    
     protected abstract int evalDeltaCout();
     protected abstract boolean doMouvement();
 
