@@ -21,6 +21,7 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import operateur.InsertionClient;
+import operateur.IntraDeplacement;
 import operateur.Operateur;
 import operateur.OperateurInterTournees;
 import operateur.OperateurIntraTournee;
@@ -281,10 +282,12 @@ public class Tournee {
     public OperateurLocal getMeilleurOperateurIntra(TypeOperateurLocal type) { 
         OperateurLocal best = OperateurLocal.getOperateur(type);
         for(int i=0; i<clients.size(); i++) {
-            for(int j=0; j<clients.size()+1; j++) { 
-                OperateurIntraTournee op = OperateurLocal.getOperateurIntra(type, this, i, j);
-                if(op.isMeilleur(best)) {
-                    best = op;
+            for(int j=0; j<clients.size()+1; j++) {
+                if(j < clients.size()){
+                    OperateurIntraTournee op = OperateurLocal.getOperateurIntra(type, this, i, j);
+                    if(op.isMeilleur(best)) {
+                        best = op;
+                    }                  
                 }
             }
         }    
@@ -355,6 +358,45 @@ public class Tournee {
         }
         if (!this.isPositionValide(positionI) || !this.isPositionValide(positionJ)) {
             return false;
+        }
+        return true;
+    }
+    
+    public boolean doDeplacement(IntraDeplacement infos){
+        if(infos==null) return false;
+        if(!infos.isMouvementRealisable()) return false;
+        
+        /*Il faut donc modifier la liste des clients afin de réaliser 
+        le mouvement de déplacement d’un client, et mettre correctement à jour 
+        l’ attribut coût total de la tournée. Pour cela on se sert des 
+        informations con- tenues dans le paramètre infos.
+        Faites extrêmement attention à l’ordre dans lequel vous retirez et vous 
+        insérer le client dans la liste des clients, et aux indices auxquels 
+        vous faites ces opérations de suppression et d’insertion.*/
+        
+        Client clientI = infos.getClientI();
+        Client clientJ = infos.getClientJ();
+        int positionI = infos.getPositionI();
+        int positionJ = infos.getPositionJ();
+
+        // déplacement du client I avant le client J
+        System.out.println("je veux déplacer le client°" + clientI.getId() + " en position " + positionI + ", avant le client°" + clientJ.getId() + " en position " + positionJ);
+        this.clients.remove(positionI);
+        if(positionI < positionJ) this.clients.add(positionJ-1, clientI);
+        if(positionI > positionJ) this.clients.add(positionJ, clientI);
+        System.out.println("le client en position " + this.clients.indexOf(clientI) + " est le " + this.clients.get(this.clients.indexOf(clientI)).getId());
+        
+        for(Client c : this.clients)
+            System.out.print(c.getId() + " ");
+        
+        // maj du coût du déplacement
+        //this.coutTotal += this.deltaCoutDeplacement(positionI, positionJ);  
+        this.coutTotal += infos.getDeltaCout();
+        
+        if(!this.check()){
+            System.out.println("ERROR doDeplacement");
+            System.out.println(infos);
+            System.exit(-1);
         }
         return true;
     }

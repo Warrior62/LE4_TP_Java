@@ -9,6 +9,7 @@ package test;
 import Solveur.InsertionPlusProcheVoisin;
 import Solveur.InsertionSimple;
 import Solveur.MeilleureInsertion;
+import Solveur.RechercheLocale;
 import Solveur.Solveur;
 import com.mycompany.cvrp.instance.Instance;
 import com.mycompany.cvrp.io.InstanceReader;
@@ -93,6 +94,7 @@ public class TestAllSolveur {
         // TO ADD : par la suite vous ajouterez ici les autres solveurs a tester
         solveurs.add(new InsertionPlusProcheVoisin());
         solveurs.add(new MeilleureInsertion());
+        solveurs.add(new RechercheLocale());
     }
     
     /**

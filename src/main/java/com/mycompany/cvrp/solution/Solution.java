@@ -17,6 +17,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import operateur.InsertionClient;
 import operateur.Operateur;
+import operateur.OperateurIntraTournee;
+import operateur.OperateurLocal;
+import operateur.TypeOperateurLocal;
 
 /**
  *
@@ -190,6 +193,44 @@ public class Solution {
         
         this.coutTotal += infos.getDeltaCout();
         return true;
+    }
+    
+    public boolean doMouvementRechercheLocale(OperateurLocal infos){
+        if(infos == null) return false;  
+        if(!this.listeTournees.contains(infos.getTournee())) return false;
+        if(!infos.doMouvementIfRealisable()) return false;
+        
+        this.coutTotal += infos.getDeltaCout();
+        if(!this.check()){
+            System.out.println("ERROR doMouvementRechercheLocale");
+            System.out.println(infos);
+            System.exit(-1);
+        }
+        return true;
+    }
+    
+    private OperateurLocal getMeilleurOperateurIntra(TypeOperateurLocal type){
+        OperateurLocal best = OperateurLocal.getOperateur(type);
+        for(Tournee t : this.listeTournees){
+            for(int i=0; i<t.getClients().size(); i++) {
+                for(int j=0; j<t.getClients().size()+1; j++) {
+                    if(j < t.getClients().size()){
+                        OperateurIntraTournee op = OperateurLocal.getOperateurIntra(type, t, i, j);
+                        if(op.isMeilleur(best)) {
+                            best = op;
+                        }                  
+                    }
+                }
+            }    
+        }
+        return best;
+    }
+    
+    public OperateurLocal getMeilleurOperateurLocal(TypeOperateurLocal type){
+        if(OperateurLocal.getOperateur(type) instanceof OperateurIntraTournee)
+            return this.getMeilleurOperateurIntra(type);
+        //this.getMeilleurOperateurInter(type);
+        return null;
     }
     
     @Override

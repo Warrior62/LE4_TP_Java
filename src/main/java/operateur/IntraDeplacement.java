@@ -22,6 +22,22 @@ public class IntraDeplacement extends OperateurIntraTournee{
         super(tournee, positionI, positionJ);
     }
 
+    public Client getClientI() {
+        return clientI;
+    }
+
+    public Client getClientJ() {
+        return clientJ;
+    }
+
+    public int getPositionI() {
+        return positionI;
+    }
+
+    public int getPositionJ() {
+        return positionJ;
+    }
+
     
     
     @Override
@@ -32,7 +48,8 @@ public class IntraDeplacement extends OperateurIntraTournee{
 
     @Override
     protected boolean doMouvement() {
-        return false;
+        if(this.tournee == null) return false;
+        return this.tournee.doDeplacement(this);
     }  
 
     @Override

@@ -44,5 +44,15 @@ public class TestIntraDeplacement {
         
         IntraDeplacement ind = (IntraDeplacement) OperateurLocal.getOperateurIntra(TypeOperateurLocal.INTRA_DEPLACEMENT, t, 2, 4);       
         System.out.println("ind entre 2 et 4 : " + ind.getDeltaCout()); // -20
+        
+        IntraDeplacement ind1 = (IntraDeplacement) t.getMeilleurOperateurIntra(TypeOperateurLocal.INTRA_DEPLACEMENT);       
+        System.out.println("meilleur opérateur de déplacement : " + ind1.toString());
+        
+        if(ind1.isMeilleur(ind))
+            System.out.println("ind1 meilleur que ind");
+        
+        IntraDeplacement ind_impossible = (IntraDeplacement) OperateurLocal.getOperateurIntra(TypeOperateurLocal.INTRA_DEPLACEMENT, t, 2, 3);
+        System.out.println("ind_impossible mouvement : " + ind_impossible.doMouvementIfRealisable());
+        System.out.println("ind_possible mouvement : " + ind.doMouvementIfRealisable());
     }
 }

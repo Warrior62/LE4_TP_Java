@@ -20,6 +20,7 @@ operateur/OperateurInterTournees.class
 com/mycompany/cvrp/instance/reseau/Depot.class
 test/TestAllSolveur$Resultat.class
 io/exception/FileExistException.class
+Solveur/RechercheLocale.class
 Solveur/InsertionPlusProcheVoisin.class
 com/mycompany/cvrp/instance/reseau/Route.class
 com/mycompany/cvrp/instance/reseau/Client.class
