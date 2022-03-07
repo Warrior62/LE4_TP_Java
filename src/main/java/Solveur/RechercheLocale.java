@@ -20,6 +20,10 @@ public class RechercheLocale implements Solveur{
     public RechercheLocale() {
         this.solveur = new InsertionSimple();
     }
+    
+    public RechercheLocale(Solveur solveur) {
+        this.solveur = solveur;
+    }
 
     @Override
     public String getNom() {
