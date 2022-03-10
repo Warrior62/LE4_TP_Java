@@ -17,6 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import operateur.InsertionClient;
 import operateur.Operateur;
+import operateur.OperateurInterTournees;
 import operateur.OperateurIntraTournee;
 import operateur.OperateurLocal;
 import operateur.TypeOperateurLocal;
@@ -226,9 +227,23 @@ public class Solution {
         return best;
     }
     
+    private OperateurLocal getMeilleurOperateurInter(TypeOperateurLocal type){
+        OperateurLocal best = OperateurLocal.getOperateur(type), op;
+        for(Tournee t : this.listeTournees){
+            for(Tournee t1 : this.listeTournees) {
+                op = t.getMeilleurOperateurInter(type, t1);
+                if(op.isMeilleur(best)) 
+                    best = op;
+            }    
+        }
+        return best;
+    }
+    
     public OperateurLocal getMeilleurOperateurLocal(TypeOperateurLocal type){
         if(OperateurLocal.getOperateur(type) instanceof OperateurIntraTournee)
             return this.getMeilleurOperateurIntra(type);
+        else if(OperateurLocal.getOperateur(type) instanceof OperateurInterTournees)
+            return this.getMeilleurOperateurInter(type);
         //this.getMeilleurOperateurInter(type);
         return null;
     }

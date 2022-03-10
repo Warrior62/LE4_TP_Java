@@ -12,14 +12,15 @@ import com.mycompany.cvrp.solution.Tournee;
  * @author tryla
  */
 public abstract class OperateurInterTournees extends OperateurLocal{
-    private Tournee autreTournee;
-    private int deltaCoutTournee, deltaCoutAutreTournee;
+    protected Tournee autreTournee;
+    protected int deltaCoutTournee, deltaCoutAutreTournee;
 
     public OperateurInterTournees() {
         super();
+        this.autreTournee = null;
     }
 
-    public OperateurInterTournees(Tournee autreTournee, Tournee tournee, int positionI, int positionJ) {
+    public OperateurInterTournees(Tournee tournee, Tournee autreTournee, int positionI, int positionJ) {
         super(tournee, positionI, positionJ);
         this.autreTournee = autreTournee;
         this.clientJ = autreTournee.getClient(positionJ);
@@ -34,9 +35,9 @@ public abstract class OperateurInterTournees extends OperateurLocal{
     protected int evalDeltaCout() {
         this.deltaCoutTournee = this.evalDeltaCoutTournee();
         this.deltaCoutAutreTournee = this.evalDeltaCoutAutreTournee();
-        if(this.getDeltaCoutAutreTournee() == Integer.MAX_VALUE || this.getDeltaCoutTournee() == Integer.MAX_VALUE)
+        if(this.deltaCoutTournee == Integer.MAX_VALUE || this.deltaCoutAutreTournee == Integer.MAX_VALUE)
             return Integer.MAX_VALUE;
-        return this.getDeltaCoutTournee() + this.getDeltaCoutAutreTournee();
+        return this.deltaCoutTournee + this.deltaCoutAutreTournee;
     }
 
     public int getDeltaCoutTournee() {
@@ -51,6 +52,10 @@ public abstract class OperateurInterTournees extends OperateurLocal{
 
     @Override
     public String toString() {
-        return "OperateurInterTournees{" + "autreTournee=" + autreTournee + ", deltaCoutTournee=" + deltaCoutTournee + ", deltaCoutAutreTournee=" + deltaCoutAutreTournee + '}';
+        return "InterTournees" 
+                + super.toString()
+                + "\n\tautreTournee=" + autreTournee 
+                + "\n\tdeltaCoutTournee=" + deltaCoutTournee 
+                + "\n\tdeltaCoutAutreTournee=" + deltaCoutAutreTournee;
     }
 }

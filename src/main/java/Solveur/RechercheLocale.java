@@ -27,7 +27,7 @@ public class RechercheLocale implements Solveur{
 
     @Override
     public String getNom() {
-        return "RechercheLocale";
+        return this.solveur.getNom() + " : RechercheLocale";
     }
 
     @Override
@@ -37,9 +37,11 @@ public class RechercheLocale implements Solveur{
         while(improve){
             improve = false;
             operateur.OperateurLocal best = s.getMeilleurOperateurLocal(TypeOperateurLocal.INTRA_DEPLACEMENT);
-            if(best.isMouvementAmeliorant()){
-                s.doMouvementRechercheLocale(best);
-                improve = true;
+            if(best != null){
+                if(best.isMouvementAmeliorant()){
+                    s.doMouvementRechercheLocale(best);
+                    improve = true;
+                }
             }
         }
         return s;

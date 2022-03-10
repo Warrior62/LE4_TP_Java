@@ -43,10 +43,10 @@ public abstract class OperateurLocal extends Operateur {
             case INTRA_DEPLACEMENT:
                 return new IntraDeplacement();
             /*case INTRA_ECHANGE:
-                return new IntraEchange();
+                return new IntraEchange();*/
             case INTER_DEPLACEMENT:
-                return new InterDeplacement(tournee, positionI, positionJ);
-            case INTER_ECHANGE:
+                return new InterDeplacement();
+            /*case INTER_ECHANGE:
                 return new InterEchange(tournee, positionI, positionJ);*/
             default:
                 return null;
@@ -64,11 +64,11 @@ public abstract class OperateurLocal extends Operateur {
         }
     }
     
-    public static OperateurInterTournees getOperateurInter(TypeOperateurLocal type, Tournee tournee, int positionI, int positionJ){
+    public static OperateurInterTournees getOperateurInter(TypeOperateurLocal type, Tournee tournee, Tournee autreTournee, int positionI, int positionJ){
         switch(type){
-            /*case INTER_DEPLACEMENT:
-                return new InterDeplacement(tournee, positionI, positionJ);
-            case INTER_ECHANGE:
+            case INTER_DEPLACEMENT:
+                return new InterDeplacement(tournee, autreTournee, positionI, positionJ);
+            /*case INTER_ECHANGE:
                 return new InterEchange(tournee, positionI, positionJ);*/
             default:
                 return null;
@@ -77,6 +77,11 @@ public abstract class OperateurLocal extends Operateur {
 
     @Override
     public String toString() {
-        return "OperateurLocal{" + "clientI=" + clientI + ", positionI=" + positionI + ", clientJ=" + clientJ + ", positionJ=" + positionJ + '}';
+         return "Local" 
+                + super.toString()
+                + "\n\tclientI=" + clientI 
+                + "\n\tpositionI=" + positionI 
+                + "\n\tclientJ=" + clientJ 
+                + "\n\tpositionJ=" + positionJ;
     }    
 }

@@ -52,7 +52,7 @@ public class TestIntraDeplacement {
             System.out.println("ind1 meilleur que ind");
         
         IntraDeplacement ind_impossible = (IntraDeplacement) OperateurLocal.getOperateurIntra(TypeOperateurLocal.INTRA_DEPLACEMENT, t, 2, 3);
-        System.out.println("ind_impossible mouvement : " + ind_impossible.doMouvementIfRealisable());
-        System.out.println("ind_possible mouvement : " + ind.doMouvementIfRealisable());
+        System.out.println("ind_impossible mouvement : " + ind_impossible.doMouvementIfRealisable()); // false
+        System.out.println("ind_possible mouvement : " + ind.doMouvementIfRealisable()); // true
     }
 }

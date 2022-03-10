@@ -63,6 +63,8 @@ public abstract class Operateur {
 
     @Override
     public String toString() {
-        return "Operateur{" + "tournee=" + tournee + ", \ndeltaCout=" + deltaCout + '}';
+        return "Operateur" 
+                + "\n\ttournee=" + tournee 
+                + "\n\tdeltaCout=" + deltaCout;
     }    
 }
