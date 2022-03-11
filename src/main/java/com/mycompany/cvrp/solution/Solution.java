@@ -147,7 +147,6 @@ public class Solution {
     private boolean checkUniciteClientTournee() {
         List<Client> clients = this.instance.getClients();
         for(Tournee t : this.listeTournees){
-            System.out.println("Nb cli dans t : " + t.getClients().size());
             for(Client c : t.getClients()){
                 if(!clients.remove(c)){
                     System.out.println("le client " + c.getId() + " pose problème");

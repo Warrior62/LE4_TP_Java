@@ -6,6 +6,7 @@
 package Solveur;
 
 import com.mycompany.cvrp.instance.Instance;
+import com.mycompany.cvrp.io.InstanceReader;
 import com.mycompany.cvrp.solution.Solution;
 import operateur.TypeOperateurLocal;
 
@@ -36,15 +37,28 @@ public class RechercheLocale implements Solveur{
         boolean improve = true;
         while(improve){
             improve = false;
-            operateur.OperateurLocal best = s.getMeilleurOperateurLocal(TypeOperateurLocal.INTRA_DEPLACEMENT);
-            if(best != null){
+            operateur.OperateurLocal best = s.getMeilleurOperateurLocal(TypeOperateurLocal.INTER_DEPLACEMENT);
+            //if(best != null){
                 if(best.isMouvementAmeliorant()){
                     s.doMouvementRechercheLocale(best);
                     improve = true;
                 }
-            }
+            //}
         }
         return s;
+    }
+    
+    public static void main(String[] args) {
+        InstanceReader reader;
+        try {
+            reader = new InstanceReader("instances/A-n32-k5.vrp");
+            Instance i = reader.readInstance();
+            RechercheLocale rl = new RechercheLocale();
+            Solution s1 = rl.solve(i);
+            System.out.println("s1 check : " + s1.check());
+        } catch(Exception e){
+            System.out.println(e);
+        }
     }
     
 }

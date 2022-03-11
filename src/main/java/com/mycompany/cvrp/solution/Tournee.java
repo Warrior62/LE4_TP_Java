@@ -339,7 +339,10 @@ public class Tournee {
         Point nextClient = this.getNext(position);
         Point currentClient = this.getCurrent(position);
         
-        int deltaCout = prevClient.getCoutVers(nextClient);   
+        int deltaCout = 0;
+        if(!prevClient.equals(this.depot) || !nextClient.equals(this.depot)) { // on n'ajoute le cout de prev a next que si l'un des deux n'est pas le depot
+            deltaCout = prevClient.getCoutVers(nextClient);   
+        }     
         deltaCout = deltaCout - prevClient.getCoutVers(currentClient) - currentClient.getCoutVers(nextClient);
         return deltaCout;
     }
@@ -448,10 +451,9 @@ public class Tournee {
     
     public boolean doDeplacement(InterDeplacement infos){
         if(infos==null) return false;
-        if(!infos.isMouvementRealisable()) return false;
+        if(!infos.isMouvementAmeliorant()) return false;
         
         Client clientI = infos.getClientI();
-        Client clientJ = infos.getClientJ();
         int positionI = infos.getPositionI();
         int positionJ = infos.getPositionJ();
 
@@ -481,7 +483,7 @@ public class Tournee {
     
     @Override
     public String toString() {
-        String s = "Tournee{" + "capacite=" + capacite + ", depot=" + depot + ", clients=[";
+        String s = "{" + "capacite=" + capacite + ", depot=" + depot + ", clients=[";
         for(Client c : this.clients){
             s += c.getId() + ", ";
         }
