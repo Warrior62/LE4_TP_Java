@@ -38,6 +38,15 @@ public class Solution {
         this.listeTournees = new ArrayList<>();
     }
 
+    public Solution(Solution s) {
+        this.instance = s.instance;
+        this.coutTotal = s.coutTotal;
+        List<Tournee> list = new ArrayList<>();
+        for(int i=0; i<s.listeTournees.size(); i++)
+            list.add(i, s.listeTournees.get(i));     
+        this.listeTournees = list;
+    }
+
     public List<Tournee> getListeTournees() {
         return listeTournees;
     }
@@ -109,11 +118,11 @@ public class Solution {
         
         Tournee lastTournee = this.listeTournees.get(lastIndex);
         coutInit = lastTournee.getCoutTotal();
-        System.out.println("cout total: " + this.coutTotal + ", coutInit: " + coutInit);
+        //System.out.println("cout total: " + this.coutTotal + ", coutInit: " + coutInit);
         if(lastTournee.ajouterClient(clientToAdd)){
             this.coutTotal -= coutInit;
             this.coutTotal += lastTournee.getCoutTotal();
-            System.out.println("\t\tcout total: " + this.coutTotal + ", coutInit: " + coutInit);
+            //System.out.println("\t\tcout total: " + this.coutTotal + ", coutInit: " + coutInit);
             return true;
         }
         else{
@@ -129,18 +138,18 @@ public class Solution {
             testCoutTotal += t.getCoutTotal();
         }
         boolean res = (testCoutTotal == this.getCoutTotal()); 
-        System.out.println("Solution Check Cout total : " + res);
+        //System.out.println("Solution Check Cout total : " + res);
         return res;
     }
 
     private boolean checkToutesTourneesRealisables() {
         for(Tournee t : this.listeTournees){
             if(t.check() == false){
-                System.out.println("Solution Check Tournees réalisables : false");
+                //System.out.println("Solution Check Tournees réalisables : false");
                return false; 
             } 
         }      
-        System.out.println("Solution Check tournées réalisables OK");
+        //System.out.println("Solution Check tournées réalisables OK");
         return true;
     }
 
@@ -149,7 +158,7 @@ public class Solution {
         for(Tournee t : this.listeTournees){
             for(Client c : t.getClients()){
                 if(!clients.remove(c)){
-                    System.out.println("le client " + c.getId() + " pose problème");
+                    //System.out.println("le client " + c.getId() + " pose problème");
                     return false;
                 }
             }
@@ -158,7 +167,7 @@ public class Solution {
             System.out.println("ERREUR UNICITE ISEMPTY");
             return false;
         } 
-        System.out.println("Solution Check unicité client tournée OK");
+        //System.out.println("Solution Check unicité client tournée OK");
         return true;
     }
    

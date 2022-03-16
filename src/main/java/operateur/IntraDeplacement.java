@@ -56,4 +56,14 @@ public class IntraDeplacement extends OperateurIntraTournee{
     public String toString() {
         return super.toString();
     }
+
+    @Override
+    public boolean isTabou(OperateurLocal operateur) {
+        if(operateur == null) return false;
+        if(operateur.tournee == null || operateur.clientI == null || operateur.clientJ == null) return false;
+        boolean isIntraDeplacement = operateur instanceof IntraDeplacement; 
+        boolean tourneesIdentiques = this.tournee.equals(operateur.tournee); 
+        boolean clientsDeplacesIdentiques = this.clientI.equals(operateur.clientI);
+        return isIntraDeplacement && tourneesIdentiques && clientsDeplacesIdentiques;
+    }
 }

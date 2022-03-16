@@ -54,5 +54,8 @@ public class TestIntraDeplacement {
         IntraDeplacement ind_impossible = (IntraDeplacement) OperateurLocal.getOperateurIntra(TypeOperateurLocal.INTRA_DEPLACEMENT, t, 2, 3);
         System.out.println("ind_impossible mouvement : " + ind_impossible.doMouvementIfRealisable()); // false
         System.out.println("ind_possible mouvement : " + ind.doMouvementIfRealisable()); // true
+        
+        System.out.println("ind mouvement tabou de ind1 ? " + ind1.isTabou(ind));
+        System.out.println("ind1 mouvement tabou de ind ? " + ind.isTabou(ind1));
     }
 }

@@ -1,5 +1,6 @@
 com/mycompany/cvrp/io/InstanceReader.class
 operateur/OperateurLocal.class
+operateur/ListeTabou.class
 io/exception/FormatFileException.class
 com/mycompany/cvrp/solution/Solution.class
 test/TestMeilleurInsertion.class
@@ -26,6 +27,7 @@ operateur/TypeOperateurLocal.class
 com/mycompany/cvrp/instance/reseau/Depot.class
 test/TestAllSolveur$Resultat.class
 io/exception/FileExistException.class
+Solveur/RechercheTabou.class
 Solveur/InsertionPlusProcheVoisin.class
 com/mycompany/cvrp/instance/reseau/Route.class
 com/mycompany/cvrp/instance/reseau/Client.class

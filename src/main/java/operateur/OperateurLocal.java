@@ -74,6 +74,8 @@ public abstract class OperateurLocal extends Operateur {
                 return null;
         }
     }
+    
+    public abstract boolean isTabou(OperateurLocal operateur);
 
     @Override
     public String toString() {

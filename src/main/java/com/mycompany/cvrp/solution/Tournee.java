@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 import operateur.InsertionClient;
 import operateur.InterDeplacement;
 import operateur.IntraDeplacement;
+import operateur.ListeTabou;
 import operateur.Operateur;
 import operateur.OperateurInterTournees;
 import operateur.OperateurIntraTournee;
@@ -53,6 +54,13 @@ public class Tournee {
         this.capacite = instance.getCapacite();
         this.depot = instance.getDepot();
         this.clients = new LinkedList<>();
+    }
+
+    public Tournee(Tournee t) {
+        this.capacite = t.capacite;
+        this.depot = t.depot;
+        this.clients = t.clients;
+        this.instance = t.instance;
     }
 
     public int getCapacite() {
@@ -172,7 +180,7 @@ public class Tournee {
         if(lastClient != null){
             testCoutTotal += lastClient.getCoutVers(this.depot);
         }
-        System.out.println("\tTournee check cout total : " + (testCoutTotal + " " + this.getCoutTotal()));
+        //System.out.println("\tTournee check cout total : " + (testCoutTotal + " " + this.getCoutTotal()));
         return testCoutTotal == this.getCoutTotal();
     }
     
@@ -180,12 +188,12 @@ public class Tournee {
         int testDemande = 0;
         for(Client c : this.clients) testDemande += c.getQuantiteAMeLivrer();
         if(testDemande != this.demandeTotale) return false;
-        System.out.println("\tTournee check demande totale : true");
+        //System.out.println("\tTournee check demande totale : true");
         return true;
     }
     
     private boolean checkCapacite() {
-        System.out.println("\tTournee check capacité : " + (this.demandeTotale <= this.capacite));
+        //System.out.println("\tTournee check capacité : " + (this.demandeTotale <= this.capacite));
         return this.demandeTotale <= this.capacite;
     }
     
@@ -294,9 +302,11 @@ public class Tournee {
         for(int i=0; i<clients.size(); i++) {
             for(int j=0; j<clients.size()+1; j++) {
                 OperateurIntraTournee op = OperateurLocal.getOperateurIntra(type, this, i, j);
-                if(op.isMeilleur(best)) {
+                
+                if(op.isMeilleur(best) && !ListeTabou.getInstance().isTabou(op)) {
                     best = op;
-                }                  
+                } 
+                ListeTabou.getInstance().add(op);
             }
         }    
         return best;
@@ -308,9 +318,11 @@ public class Tournee {
         for(int i=0; i<clients.size(); i++) {
             for(int j=0; j<autreTournee.clients.size()+1; j++) { 
                 OperateurInterTournees op = OperateurLocal.getOperateurInter(type, this, autreTournee, i, j);
-                if(op.isMeilleur(best)) {
+                
+                if(op.isMeilleur(best) && !ListeTabou.getInstance().isTabou(op)) {
                     best = op;
                 }
+                ListeTabou.getInstance().add(op);
             }
         }    
         return best;
@@ -428,11 +440,11 @@ public class Tournee {
         int positionJ = infos.getPositionJ();
 
         // déplacement du client I avant le client J
-        System.out.println("je veux déplacer le client°" + clientI.getId() + " en position " + positionI + ", avant le client°" + clientJ.getId() + " en position " + positionJ);
+        //System.out.println("je veux déplacer le client°" + clientI.getId() + " en position " + positionI + ", avant le client°" + clientJ.getId() + " en position " + positionJ);
         this.clients.remove(positionI);
         if(positionI < positionJ) this.clients.add(positionJ-1, clientI);
         if(positionI > positionJ) this.clients.add(positionJ, clientI);
-        System.out.println("le client en position " + this.clients.indexOf(clientI) + " est le " + this.clients.get(this.clients.indexOf(clientI)).getId());
+        //System.out.println("le client en position " + this.clients.indexOf(clientI) + " est le " + this.clients.get(this.clients.indexOf(clientI)).getId());
         
         for(Client c : this.clients)
             System.out.print(c.getId() + " ");

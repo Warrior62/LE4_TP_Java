@@ -8,6 +8,7 @@ package Solveur;
 import com.mycompany.cvrp.instance.Instance;
 import com.mycompany.cvrp.io.InstanceReader;
 import com.mycompany.cvrp.solution.Solution;
+import operateur.ListeTabou;
 import operateur.TypeOperateurLocal;
 
 /**
@@ -33,6 +34,7 @@ public class RechercheLocale implements Solveur{
 
     @Override
     public Solution solve(Instance instance) {
+        ListeTabou.getInstance().vider();
         Solution s = this.solveur.solve(instance);
         boolean improve = true;
         while(improve){

@@ -10,6 +10,7 @@ import Solveur.InsertionPlusProcheVoisin;
 import Solveur.InsertionSimple;
 import Solveur.MeilleureInsertion;
 import Solveur.RechercheLocale;
+import Solveur.RechercheTabou;
 import Solveur.Solveur;
 import com.mycompany.cvrp.instance.Instance;
 import com.mycompany.cvrp.io.InstanceReader;
@@ -95,12 +96,13 @@ public class TestAllSolveur {
         solveurs.add(new InsertionPlusProcheVoisin());
         solveurs.add(new MeilleureInsertion());
         solveurs.add(new RechercheLocale());
+        solveurs.add(new RechercheTabou(new RechercheLocale(new InsertionSimple())));
     }
     
     /**
      * Lecture de tous les noms des instances a tester.
      * Ces instances se trouvent dans le repertoire pathRepertoire.
-     * Les instances sont lues et chargees en memoire.
+     * Les instances sont lues et chargees en memoest-ceire.
      */
     private void readNomInstances() {
         File folder = new File(pathRepertoire);
