@@ -301,8 +301,7 @@ public class Tournee {
         OperateurLocal best = OperateurLocal.getOperateur(type);
         for(int i=0; i<clients.size(); i++) {
             for(int j=0; j<clients.size()+1; j++) {
-                OperateurIntraTournee op = OperateurLocal.getOperateurIntra(type, this, i, j);
-                
+                OperateurIntraTournee op = OperateurLocal.getOperateurIntra(type, this, i, j);         
                 if(op.isMeilleur(best) && !ListeTabou.getInstance().isTabou(op)) {
                     best = op;
                 } 
@@ -316,8 +315,7 @@ public class Tournee {
         if(this.equals(autreTournee)) return best;
         for(int i=0; i<clients.size(); i++) {
             for(int j=0; j<autreTournee.clients.size()+1; j++) { 
-                OperateurInterTournees op = OperateurLocal.getOperateurInter(type, this, autreTournee, i, j);
-                
+                OperateurInterTournees op = OperateurLocal.getOperateurInter(type, this, autreTournee, i, j);         
                 if(op.isMeilleur(best) && !ListeTabou.getInstance().isTabou(op)) {
                     best = op;
                 }
@@ -423,14 +421,6 @@ public class Tournee {
     public boolean doDeplacement(IntraDeplacement infos){
         if(infos==null) return false;
         if(!infos.isMouvementRealisable()) return false;
-        
-        /*Il faut donc modifier la liste des clients afin de réaliser 
-        le mouvement de déplacement d’un client, et mettre correctement à jour 
-        l’ attribut coût total de la tournée. Pour cela on se sert des 
-        informations con- tenues dans le paramètre infos.
-        Faites extrêmement attention à l’ordre dans lequel vous retirez et vous 
-        insérer le client dans la liste des clients, et aux indices auxquels 
-        vous faites ces opérations de suppression et d’insertion.*/
         
         Client clientI = infos.getClientI();
         Client clientJ = infos.getClientJ();

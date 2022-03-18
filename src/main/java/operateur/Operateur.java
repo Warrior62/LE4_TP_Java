@@ -33,10 +33,10 @@ public abstract class Operateur {
         return tournee;
     }
     
-    
-    
     public boolean isMouvementRealisable(){
-        return this.getDeltaCout() != Integer.MAX_VALUE;
+        if(this.getDeltaCout() == Integer.MAX_VALUE)
+            return false;
+        return true;
     }
     
     public boolean isMeilleur(Operateur op){
@@ -47,10 +47,9 @@ public abstract class Operateur {
     }
     
     public boolean doMouvementIfRealisable(){
-        if(!this.isMouvementRealisable())
-            return false;
-        this.doMouvement();
-        return true;
+        if(isMouvementRealisable())
+            return this.doMouvement();
+        return false;
     }
     
     public boolean isMouvementAmeliorant(){

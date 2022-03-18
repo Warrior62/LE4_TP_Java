@@ -206,7 +206,7 @@ public class Solution {
     
     public boolean doMouvementRechercheLocale(OperateurLocal infos){
         if(infos == null) return false;  
-        if(!this.listeTournees.contains(infos.getTournee())) return false;
+        //if(!this.listeTournees.contains(infos.getTournee())) return false;
         if(!infos.doMouvementIfRealisable()) return false;
         
         this.coutTotal += infos.getDeltaCout();

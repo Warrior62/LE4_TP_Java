@@ -14,9 +14,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class ListeTabou{
     
     private static ListeTabou instance;
-    private final int capacity = 80;
-    private LinkedBlockingQueue<OperateurLocal> liste;
-    private int deltaAspiration;
+    protected final int capacity = 80;
+    protected LinkedBlockingQueue<OperateurLocal> liste;
+    protected int deltaAspiration;
     
     public static ListeTabou getInstance(){
         if(instance == null)
@@ -25,34 +25,33 @@ public class ListeTabou{
     }
 
     private ListeTabou() {
-        this.liste = new LinkedBlockingQueue<OperateurLocal>(this.capacity);
+        this.liste = new LinkedBlockingQueue(this.capacity);
         this.deltaAspiration = 0;
     }
 
     public int getCapacity() {
-        return instance.capacity;
+        return this.capacity;
     }
 
     public void setDeltaAspiration(int deltaAspiration) {
         this.deltaAspiration = deltaAspiration;
     }
     
-    public boolean add(OperateurLocal operateur){ 
-        if(instance.liste.offer(operateur)){
-            instance.liste.poll();
-            instance.liste.offer(operateur);
-            return false;
-        }
-        return true;
+    public boolean add(OperateurLocal operateur){
+        if(operateur == null) return false;
+        if(this.liste.size() >= this.capacity)
+            this.liste.poll();
+        return this.liste.offer(operateur);
     }
     
     public void vider(){
-        instance.liste.clear();
+        this.liste.clear();
     }
     
     public boolean isTabou(OperateurLocal operateur){
+        if(operateur == null) return false;
         if(operateur.getDeltaCout() < this.deltaAspiration) return false;
-        for(OperateurLocal ol : instance.liste)
+        for(OperateurLocal ol : this.liste)
             if(ol.isTabou(operateur))
                 return true;
         return false;

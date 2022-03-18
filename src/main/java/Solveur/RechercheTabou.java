@@ -10,6 +10,7 @@ import com.mycompany.cvrp.solution.Solution;
 import java.util.List;
 import operateur.IntraDeplacement;
 import operateur.ListeTabou;
+import operateur.TypeOperateurLocal;
 
 /**
  *
@@ -33,11 +34,11 @@ public class RechercheTabou implements Solveur{
         
         Solution s = this.solveur.solve(instance);
         Solution sBest = new Solution(s);
-        operateur.TypeOperateurLocal[] operateursListe = {operateur.TypeOperateurLocal.INTER_DEPLACEMENT, operateur.TypeOperateurLocal.INTRA_DEPLACEMENT};
+        operateur.TypeOperateurLocal[] operateursListe = {operateur.TypeOperateurLocal.INTER_DEPLACEMENT};
         int nbIterMax = 10000, nbIterSansAmelioration = 0;
         ListeTabou.getInstance().vider();
         while(nbIterSansAmelioration < nbIterMax){
-            operateur.OperateurLocal best = new IntraDeplacement();
+            operateur.OperateurLocal best = operateur.OperateurLocal.getOperateur(TypeOperateurLocal.INTRA_DEPLACEMENT);
             ListeTabou.getInstance().setDeltaAspiration(sBest.getCoutTotal() - s.getCoutTotal());
             for(operateur.TypeOperateurLocal o : operateursListe){
                 operateur.OperateurLocal op = s.getMeilleurOperateurLocal(o);
