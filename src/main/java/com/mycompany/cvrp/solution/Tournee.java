@@ -306,7 +306,6 @@ public class Tournee {
                 if(op.isMeilleur(best) && !ListeTabou.getInstance().isTabou(op)) {
                     best = op;
                 } 
-                ListeTabou.getInstance().add(op);
             }
         }    
         return best;
@@ -322,7 +321,6 @@ public class Tournee {
                 if(op.isMeilleur(best) && !ListeTabou.getInstance().isTabou(op)) {
                     best = op;
                 }
-                ListeTabou.getInstance().add(op);
             }
         }    
         return best;
